@@ -8,10 +8,6 @@ using namespace std;
 using namespace httplib;
 using namespace nlohmann;
 
-bool is_valid_dir(string dir) {
-    return dir == "w" || dir == "d" || dir == "a" || dir == "s";
-}
-
 int main(int argc, char *argv[]) {
     ifstream i("response_codes.json");
     json response_codes;
@@ -68,31 +64,27 @@ int main(int argc, char *argv[]) {
     });
 
     srv.Post("/move", [&](const auto& req, auto& res) {
+        string result = "";
         if (!req.has_param("direction")) {
-            res.set_content("[!] Invalid direction!", "text/plain");
+            result = "808";
         }
         string dir = req.get_param_value("direction");
         if (!req.has_header("name")) {
-            res.set_content("[!] Invalid player name!", "text/plain");
+            result = "808";
         }
         string name = req.get_header_value("name");
         int player_index = board.get_player_index(name);
-        if (board.players_index < board.players_number - 1) {
-            res.set_content("[!] wait for other players to join!", "text/plain");
-        }
-        else if (player_index == -1) {
-            res.set_content("[!] Invalid player name!", "text/plain");
-        }
-        else if (!is_valid_dir(dir)) {
-            res.set_content("[!] Invalid direction!", "text/plain");
-        }
-        else if (board.current_player != player_index) {
-            res.set_content("[!] It's not your turn!", "text/plain");
+        if (player_index == -1) {
+            result = "811";
         }
         else {
-            board.move_player(player_index, dir);
-            res.set_content(board.get_board(), "text/plain");
+            result = board.move_player(player_index, dir);
         }
+        json j_res = {
+            { "message", response_codes[result] },
+            { "status", result }
+        };
+        res.set_content(j_res.dump(), "application/json");
     });
 
     // 801 => wait for other players to join!

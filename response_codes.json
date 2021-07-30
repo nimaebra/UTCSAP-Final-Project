@@ -7,5 +7,9 @@
   "805": "[!] Invalid row",
   "806": "[!] Invalid column",
   "807": "[!] Invalid wall type",
-  "808": "[!] Invalid parameter for endpoint"
+  "808": "[!] Invalid parameter for endpoint",
+  "809": "[!] Invalid direction to move",
+  "810": "[!] It's not your turn",
+  "811": "[!] Invalid player name",
+  "812": "[!] Cannot move to this coordinate"
 }

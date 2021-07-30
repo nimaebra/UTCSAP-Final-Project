@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int BOARD_SIZE = 11;
+const int BOARD_SIZE = 9;
 
 struct Player {
     std::string name, show_name;
@@ -23,7 +23,7 @@ class Board {
         void place_players();
         string get_board();
         string place_wall(int, int, string);
-        void move_player(int, string);
+        string move_player(int, string);
         bool is_valid_move(int, string);
         string add_player(string name);
         int get_player_index(string);

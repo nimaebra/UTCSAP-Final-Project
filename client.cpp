@@ -6,13 +6,19 @@
 
 #include "json.hpp"
 #include "httplib.h"
-#include "Board.cpp"
 
 using namespace std;
 using namespace httplib;
 using namespace nlohmann;
 
 const unsigned int microsecond = 1000000;
+
+const string green("\033[1;32m");
+const string red("\033[0;31m");
+const string yellow("\033[1;33m");
+const string cyan("\033[0;36m");
+const string magenta("\033[0;35m");
+const string reset("\033[0m");
 
 bool is_valid_dir(string dir) {
     return dir == "w" || dir == "d" || dir == "a" || dir == "s";
@@ -35,7 +41,7 @@ int main() {
         cout << name << endl;
         if (res->status == 200) {
             auto p_res = json::parse(res->body);
-            // cout << p_res["message"].get<string>() << endl;
+            cout << p_res["message"].get<string>() << endl;
             if (p_res["status"] == "800") {
                 cli.set_default_headers({
                     { "name", name }
@@ -58,11 +64,11 @@ int main() {
             auto p_res = json::parse(res->body);
             // cout << p_res["status"] << ", " << p_res["current_player"] << endl;
             current_board = p_res["board"].get<string>();
-            if (current_board != last_board) {
+            // if (current_board != last_board) {
                 system("clear");
                 cout << current_board << endl;
-                last_board = current_board;
-            }
+                // last_board = current_board;
+            // }
             if (p_res["status"] == "801") {
                 current_message = p_res["message"].get<string>();
                 if (current_message != last_message) {
@@ -89,7 +95,8 @@ int main() {
                         { "direction", dir }
                     };
                     auto res = cli.Post("/move", move_params);
-                    cout << res->body << endl;
+                    auto p_res = json::parse(res->body);
+                    cout << p_res["message"].get<string>() << endl;
                 }
                 else if (turn == 2) {
                     while (!(row >= 1 && row <= 11)) {
@@ -113,7 +120,6 @@ int main() {
                     auto p_res = json::parse(res->body);
                     cout << p_res["message"].get<string>() << endl;
                 }
-
             }
         }
         usleep(5 * microsecond);

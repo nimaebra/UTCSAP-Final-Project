@@ -6,20 +6,23 @@
 
 using namespace std;
 
-const int TOP_X = 11, BOTTOM_X = 1;
-const int RIGHT_Y = 11, LEFT_Y = 1;
-
+const int TOP_X = BOARD_SIZE, BOTTOM_X = 1;
+const int RIGHT_Y = BOARD_SIZE, LEFT_Y = 1;
 
 bool is_valid_wall_type(string wall_type) {
     return wall_type == "v"|| wall_type == "h";
 }
 
 bool is_valid_row(int row) {
-    return row >= 1 && row <= 11;
+    return row >= 1 && row <= BOARD_SIZE;
 }
 
 bool is_valid_col(int col) {
-    return col >= 1 && col <= 11;
+    return col >= 1 && col <= BOARD_SIZE;
+}
+
+bool is_valid_dir(string dir) {
+    return dir == "w" || dir == "d" || dir == "a" || dir == "s";
 }
 
 Board::Board(int players_num) {
@@ -39,20 +42,20 @@ string Board::add_player(std::string name) {
         }
     }
     if (players_index == 0) {
-        players[players_index].x = 11;
+        players[players_index].x = BOARD_SIZE;
         players[players_index].y = 1;
     }
     else if (players_index == 1) {
         players[players_index].x = 1;
-        players[players_index].y = 11;
+        players[players_index].y = BOARD_SIZE;
     }
     else if (players_index == 2) {
         players[players_index].x = 1;
         players[players_index].y = 1;
     }
     else if (players_index == 3) {
-        players[players_index].x = 11;
-        players[players_index].y = 11;
+        players[players_index].x = BOARD_SIZE;
+        players[players_index].y = BOARD_SIZE;
     }
     players[players_index].name = name;
     players[players_index].show_name = name[0];
@@ -60,12 +63,20 @@ string Board::add_player(std::string name) {
     return "800";
 }
 
-void Board::move_player(int player_index, string dir) {
-    if (!is_valid_move(player_index, dir)) {
-        cout << "\n\n [!] Invalid move!\n\n";
-        return;
+string Board::move_player(int player_index, string dir) {
+    if (!is_valid_dir(dir)) {
+        return "809";
     }
-    else if (dir == "w") {
+    if (current_player != player_index) {
+        return "810";
+    }
+    if (players_index < players_number - 1) {
+        return "801";
+    }
+    if (!is_valid_move(player_index, dir)) {
+        return "812";
+    }
+    if (dir == "w") {
         players[player_index].x += 1;
     } 
     else if (dir == "d") {
@@ -78,6 +89,7 @@ void Board::move_player(int player_index, string dir) {
         players[player_index].y -= 1;
     }
     current_player = (current_player + 1) % players_number;
+    return "800";
 }
 
 string Board::place_wall(int i, int j, string type) {
@@ -90,8 +102,8 @@ string Board::place_wall(int i, int j, string type) {
     if (!is_valid_wall_type(type)) {
         return "807";
     }
-    for (int i = 0; i < walls.size(); i++) {
-        if (walls[i].x == i && walls[i].y == j && walls[i].type == type) {
+    for (int w = 0; w < walls.size(); w++) {
+        if (walls[w].x == i && walls[w].y == j && walls[w].type == type) {
             return "804";
         }
     }
