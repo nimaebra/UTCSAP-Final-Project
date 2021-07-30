@@ -81,6 +81,7 @@ void Board::move_player(int player_index, string dir) {
 }
 
 bool Board::place_wall(int i, int j, string type) {
+    cout << "size: " << walls.size() << endl;
     for (int i = 0; i < walls.size(); i++) {
         if (walls[i].x == i && walls[i].y == j && walls[i].type == type) {
             return false;
@@ -88,7 +89,9 @@ bool Board::place_wall(int i, int j, string type) {
     }
     // TODO: chech if the wall doesn't block a player completely!
     Wall new_wall = {.x = i, .y = j, .type = type};
+    cout << "im hereee" << endl;
     walls.push_back(new_wall);
+    current_player = (current_player + 1) % players_number;
     return true;
 }
 

@@ -30,11 +30,7 @@ int main() {
         { "name", name }
     });
 
-    MultipartFormDataItems items = {
-        {"name", name}
-    };
-
-    if (auto res = cli.Post("/join", items)) {
+    if (auto res = cli.Post("/join")) {
         if (res->status == 200) {
             cout << "succesfully!" << endl;
         }
@@ -76,11 +72,11 @@ int main() {
                     cout << res->body << endl;
                 }
                 else if (turn == 2) {
-                    while (row < 1 && row > 11) {
+                    while (!(row >= 1 && row <= 11)) {
                         cout << "Enter row (1, ..., 11): ";
                         cin >> row;
                     }
-                    while (col < 1 && col > 11) {
+                    while (!(col >= 1 && col <= 11)) {
                         cout << "Enter col (1, ..., 11): ";
                         cin >> col;
                     }
@@ -89,11 +85,11 @@ int main() {
                         cin >> type;
                     }
                     Params wall_params {
-                        { "row", row },
-                        { "col", col },
-                        { "type", type }
+                        { "row", to_string(row) },
+                        { "col", to_string(col) },
+                        { "wall-type", type }
                     };
-                    auto res = cli.Post("/put-wall", wall_params);
+                    auto res = cli.Post("/place-wall", wall_params);
                     cout << res->body << endl;
                 }
 

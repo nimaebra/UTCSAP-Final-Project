@@ -30,9 +30,11 @@ int main(int argc, char *argv[]) {
     Board board(players_number);
 
     srv.Post("/join", [&](const auto& req, auto& res) {
-        const auto& name = req.get_file_value("name");
-        // cout << name.content << endl;
-        board.add_player(name.content);
+        if (!req.has_header("name")) {
+            res.set_content("[!] Invalid player name!", "text/plain");
+        }
+        string name = req.get_header_value("name");
+        board.add_player(name);
         string response = "succesfully joined. ";
         if (board.players_number != players_number) {
             response += "waiting for other players!";
@@ -40,14 +42,16 @@ int main(int argc, char *argv[]) {
         res.set_content(response, "text/plain");
     });
 
-    srv.Post("/put-wall", [&](const auto& req, auto& res) {
+    srv.Post("/place-wall", [&](const auto& req, auto& res) {
         if (!req.has_param("row") && !req.has_param("col") && !req.has_param("wall-type")) {
             res.set_content("[!] Invalid parameter!", "text/plain");
         }
         int row = atoi(req.get_param_value("row").c_str());
         int col = atoi(req.get_param_value("col").c_str());
         string wall_type = req.get_param_value("wall-type");
+        cout << row << " " << col << " " << wall_type << endl;
         board.place_wall(row, col, wall_type);
+        res.set_content("successfuly added wall!", "text/plain");
     });
 
     srv.Post("/move", [&](const auto& req, auto& res) {
@@ -55,7 +59,6 @@ int main(int argc, char *argv[]) {
             res.set_content("[!] Invalid direction!", "text/plain");
         }
         string dir = req.get_param_value("direction");
-        cout << "dir: " << dir << endl;
         if (!req.has_header("name")) {
             res.set_content("[!] Invalid player name!", "text/plain");
         }
