@@ -22,10 +22,10 @@ class Board {
         int players_number, players_index, current_player;
         void place_players();
         string get_board();
-        bool place_wall(int, int, string);
+        string place_wall(int, int, string);
         void move_player(int, string);
         bool is_valid_move(int, string);
-        bool add_player(string name);
+        string add_player(string name);
         int get_player_index(string);
 
     private:

@@ -1,0 +1,11 @@
+{
+  "800": "Successful",
+  "801": "[!] Wait for other players to join",
+  "802": "[!] Cannot join because server is full",
+  "803": "[!] The entered name is duplicate",
+  "804": "[!] Already place wall at this coordinate",
+  "805": "[!] Invalid row",
+  "806": "[!] Invalid column",
+  "807": "[!] Invalid wall type",
+  "808": "[!] Invalid parameter for endpoint"
+}

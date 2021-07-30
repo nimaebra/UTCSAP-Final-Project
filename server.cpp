@@ -13,6 +13,10 @@ bool is_valid_dir(string dir) {
 }
 
 int main(int argc, char *argv[]) {
+    ifstream i("response_codes.json");
+    json response_codes;
+    i >> response_codes;
+
     Server srv;
 
     if (argc != 2 || strlen(argv[1]) != 1) {
@@ -30,28 +34,37 @@ int main(int argc, char *argv[]) {
     Board board(players_number);
 
     srv.Post("/join", [&](const auto& req, auto& res) {
-        if (!req.has_header("name")) {
-            res.set_content("[!] Invalid player name!", "text/plain");
+        string result;
+        if (!req.has_param("name")) {
+            result = "808";
         }
-        string name = req.get_header_value("name");
-        board.add_player(name);
-        string response = "succesfully joined. ";
-        if (board.players_number != players_number) {
-            response += "waiting for other players!";
+        string name = req.get_param_value("name");
+        result = board.add_player(name);
+        string message = response_codes[result];
+        if (result == "800") {
+            message = "You joined the game successfully!";
         }
-        res.set_content(response, "text/plain");
+        json j_res = {
+            { "message", message },
+            { "status", result }
+        };
+        res.set_content(j_res.dump(), "application/json");
     });
 
     srv.Post("/place-wall", [&](const auto& req, auto& res) {
+        string result = "";
         if (!req.has_param("row") && !req.has_param("col") && !req.has_param("wall-type")) {
-            res.set_content("[!] Invalid parameter!", "text/plain");
+            result = "808";
         }
         int row = atoi(req.get_param_value("row").c_str());
         int col = atoi(req.get_param_value("col").c_str());
         string wall_type = req.get_param_value("wall-type");
-        cout << row << " " << col << " " << wall_type << endl;
-        board.place_wall(row, col, wall_type);
-        res.set_content("successfuly added wall!", "text/plain");
+        result = board.place_wall(row, col, wall_type);
+        json j_res = {
+            { "message", response_codes[result] },
+            { "status", result }
+        };
+        res.set_content(j_res.dump(), "application/json");
     });
 
     srv.Post("/move", [&](const auto& req, auto& res) {
@@ -83,17 +96,21 @@ int main(int argc, char *argv[]) {
     });
 
     // 801 => wait for other players to join!
-    srv.Post("/game-data", [&](const auto& req, auto& res) {
+    srv.Get("/game-data", [&](const auto& req, auto& res) {
         string message = "", status = "800";
         if (board.players_index < board.players_number) {
             message = "Wait for other players to join!";
             status = "801";
         }
+        // if (board.check_winner()) { 
+
+        // }
         json j_res = {
             { "current_player", board.players[board.current_player].name },
             { "board", board.get_board() },
             { "message", message },
-            { "status", status }
+            { "status", status },
+            { "player_numbers", board.players_number },
         };
         res.set_content(j_res.dump(), "application/json");
     });

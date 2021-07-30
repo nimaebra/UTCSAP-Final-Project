@@ -24,33 +24,51 @@ int main() {
     // TODO: read this from argv!
     Client cli("localhost", 8080);
 
-    cout << "Enter yout name: ";
+    cout << "Enter your name: ";
     cin >> name;
 
-    cli.set_default_headers({
-        { "name", name }
-    });
-
-    if (auto res = cli.Post("/join")) {
+    while (true) {
+        Params new_params {
+            { "name", name },
+        };
+        auto res = cli.Post("/join", new_params);
+        cout << name << endl;
         if (res->status == 200) {
-            cout << "succesfully!" << endl;
+            auto p_res = json::parse(res->body);
+            // cout << p_res["message"].get<string>() << endl;
+            if (p_res["status"] == "800") {
+                cli.set_default_headers({
+                    { "name", name }
+                });
+                break;
+            }
+            else {
+                cout << "Enter your name: ";
+                cin >> name;
+                // cout << "nameee: " << name << endl;
+            }
         }
     }
 
     string current_board, last_board;
+    string current_message, last_message;
 
-    while (auto res = cli.Post("/game-data", move_items)) {
+    while (auto res = cli.Get("/game-data")) {
         if (res->status == 200) {
             auto p_res = json::parse(res->body);
             // cout << p_res["status"] << ", " << p_res["current_player"] << endl;
-            system("clear");
-            current_board = p_res["board"].get<std::string>();
+            current_board = p_res["board"].get<string>();
             if (current_board != last_board) {
-                cout << current_board endl;
+                system("clear");
+                cout << current_board << endl;
                 last_board = current_board;
             }
             if (p_res["status"] == "801") {
-                cout << p_res["message"] << endl;
+                current_message = p_res["message"].get<string>();
+                if (current_message != last_message) {
+                    cout << current_message << endl;
+                    last_message = current_message;
+                }
             }
             else if (p_res["current_player"] == name) {
                 cout << "It's your turn!" << endl;
@@ -92,7 +110,8 @@ int main() {
                         { "wall-type", type }
                     };
                     auto res = cli.Post("/place-wall", wall_params);
-                    cout << res->body << endl;
+                    auto p_res = json::parse(res->body);
+                    cout << p_res["message"].get<string>() << endl;
                 }
 
             }
@@ -102,28 +121,3 @@ int main() {
 
     return 0;
 } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

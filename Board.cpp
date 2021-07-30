@@ -7,7 +7,7 @@
 using namespace std;
 
 const int TOP_X = 11, BOTTOM_X = 1;
-const int RIGHT_Y = 11, LEFT_Y = 0;
+const int RIGHT_Y = 11, LEFT_Y = 1;
 
 
 bool is_valid_wall_type(string wall_type) {
@@ -29,13 +29,13 @@ Board::Board(int players_num) {
     players_index = 0;
 }
 
-bool Board::add_player(std::string name) {
+string Board::add_player(std::string name) {
     if (players_number <= players_index) {
-        return false;
+        return "802";
     }
     for (int i = 0; i < players_index; i++) {
         if (players[i].name == name) {
-            return false;
+            return "803";
         }
     }
     if (players_index == 0) {
@@ -57,7 +57,7 @@ bool Board::add_player(std::string name) {
     players[players_index].name = name;
     players[players_index].show_name = name[0];
     players_index++;
-    return true;
+    return "800";
 }
 
 void Board::move_player(int player_index, string dir) {
@@ -80,19 +80,26 @@ void Board::move_player(int player_index, string dir) {
     current_player = (current_player + 1) % players_number;
 }
 
-bool Board::place_wall(int i, int j, string type) {
-    cout << "size: " << walls.size() << endl;
+string Board::place_wall(int i, int j, string type) {
+    if (!is_valid_row(i)) {
+        return "805";
+    }
+    if (!is_valid_col(j)) {
+        return "806";
+    }
+    if (!is_valid_wall_type(type)) {
+        return "807";
+    }
     for (int i = 0; i < walls.size(); i++) {
         if (walls[i].x == i && walls[i].y == j && walls[i].type == type) {
-            return false;
+            return "804";
         }
     }
     // TODO: chech if the wall doesn't block a player completely!
     Wall new_wall = {.x = i, .y = j, .type = type};
-    cout << "im hereee" << endl;
     walls.push_back(new_wall);
     current_player = (current_player + 1) % players_number;
-    return true;
+    return "800";
 }
 
 bool Board::is_valid_move(int player_index, string dir) {
