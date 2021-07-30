@@ -12,6 +12,8 @@ using namespace std;
 using namespace httplib;
 using namespace nlohmann;
 
+const unsigned int microsecond = 1000000;
+
 bool is_valid_dir(string dir) {
     return dir == "w" || dir == "d" || dir == "a" || dir == "s";
 }
@@ -19,12 +21,11 @@ bool is_valid_dir(string dir) {
 int main() {
     string name;
     
+    // TODO: read this from argv!
     Client cli("localhost", 8080);
 
     cout << "Enter yout name: ";
     cin >> name;
-
-    unsigned int microsecond = 1000000;
 
     cli.set_default_headers({
         { "name", name }
@@ -36,22 +37,23 @@ int main() {
         }
     }
 
-    MultipartFormDataItems move_items = {
-        {"name", name},
-        { "direction", "d"}
-    };
+    string current_board, last_board;
 
     while (auto res = cli.Post("/game-data", move_items)) {
         if (res->status == 200) {
             auto p_res = json::parse(res->body);
-            cout << p_res["status"] << ", " << p_res["current_player"] << endl;
+            // cout << p_res["status"] << ", " << p_res["current_player"] << endl;
+            system("clear");
+            current_board = p_res["board"].get<std::string>();
+            if (current_board != last_board) {
+                cout << current_board endl;
+                last_board = current_board;
+            }
             if (p_res["status"] == "801") {
                 cout << p_res["message"] << endl;
             }
             else if (p_res["current_player"] == name) {
                 cout << "It's your turn!" << endl;
-                system("clear");
-                cout << p_res["board"].get<std::string>() << endl;
                 int turn = -1, row = -1, col = -1;
                 string dir = "", type = "";
                 while (turn != 1 && turn != 2) {
@@ -73,11 +75,11 @@ int main() {
                 }
                 else if (turn == 2) {
                     while (!(row >= 1 && row <= 11)) {
-                        cout << "Enter row (1, ..., 11): ";
+                        cout << "Enter row (1, 2, ..., 11): ";
                         cin >> row;
                     }
                     while (!(col >= 1 && col <= 11)) {
-                        cout << "Enter col (1, ..., 11): ";
+                        cout << "Enter col (1, 2, ..., 11): ";
                         cin >> col;
                     }
                     while (type != "h" && type != "v") {
