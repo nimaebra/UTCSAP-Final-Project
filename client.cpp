@@ -99,6 +99,7 @@ int main() {
                     cout << p_res["message"].get<string>() << endl;
                 }
                 else if (turn == 2) {
+                    // TODO: remove this hardcode 11!
                     while (!(row >= 1 && row <= 11)) {
                         cout << "Enter row (1, 2, ..., 11): ";
                         cin >> row;

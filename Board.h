@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int BOARD_SIZE = 9;
+const int BOARD_SIZE = 11;
 
 struct Player {
     std::string name, show_name;

@@ -179,7 +179,7 @@ string Board::get_board() {
     string board_view = "";
     cout << "   ";
     board_view += "   ";
-    for (int i = 0; i < BOARD_SIZE; i++) {
+    for (int i = 0; i <= BOARD_SIZE; i++) {
         cout << i << "   ";
         board_view += to_string(i) + "   ";
     }
@@ -251,8 +251,13 @@ string Board::get_board() {
                     board_view += "   ";
                 } 
                 else {
-                    cout << "    ";
-                    board_view += "    ";
+                    if (i == (BOARD_SIZE - 1) / 2 && j == (BOARD_SIZE - 1) / 2) {
+                        cout << " 🚩 ";
+                    }
+                    else {
+                        cout << "    ";
+                        board_view += "    ";
+                    }
                 }
             }
         }
@@ -273,6 +278,6 @@ string Board::get_board() {
     }
     cout << BOARD_SIZE << endl;
     board_view += to_string(BOARD_SIZE) + "\n";
-    system("clear");
+    // system("clear");
     return board_view;
 }
