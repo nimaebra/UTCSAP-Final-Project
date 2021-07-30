@@ -174,54 +174,54 @@ int Board::get_player_index(string name) {
 }
 
 string Board::get_board() {
-    // cout << " im here: " << players_number << " " << players[0].x << endl;
-    // cout << walls[0].x << " " << walls[0].y << endl;
+    // // cout<< " im here: " << players_number << " " << players[0].x << endl;
+    // // cout<< walls[0].x << " " << walls[0].y << endl;
     string board_view = "";
-    cout << "   ";
+    // cout<< "   ";
     board_view += "   ";
     for (int i = 0; i <= BOARD_SIZE; i++) {
-        cout << i << "   ";
+        // cout<< i << "   ";
         board_view += to_string(i) + "   ";
     }
-    cout << endl;
+    // cout<< endl;
     board_view += "\n";
     for (int i = 0; i < BOARD_SIZE; i++) {
-        cout << BOARD_SIZE - i << " ";
+        // cout<< BOARD_SIZE - i << " ";
         board_view += to_string(BOARD_SIZE - i) + " ";
         if (BOARD_SIZE - i < 10) {
-            cout << " ";
+            // cout<< " ";
             board_view += " ";
         }
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (i == 0) {
-                cout << "*---";
+                // cout<< "*---";
                 board_view += "*---";
             }
             else {
                 bool flag = false;
                 for (int w = 0; w < walls.size(); w++) {
                     if ((i == BOARD_SIZE - walls[w].x) && (j == walls[w].y - 1) && (walls[w].type == "h")) {
-                        cout << "*===";
+                        // cout<< "*===";
                         board_view += "*===";
                         flag = true;
                         break;
                     }
                 }
                 if (!flag) {
-                    cout << "*   ";
+                    // cout<< "*   ";
                     board_view += "*   ";
                 }
             }
         }
-        cout << "*" << endl;
+        // cout<< "*" << endl;
         board_view += "*\n";
-        cout << "   |";
+        // cout<< "   |";
         board_view += "   |";
         for (int j = 0; j < BOARD_SIZE; j++) {
             bool flag_1 = false, flag_2 = false;
             for (int p = 0; p < players_number; p++) {
                 if ((i == BOARD_SIZE - players[p].x) && (j == players[p].y - 1)) {
-                    cout << " " << players[p].show_name << " ";
+                    // cout<< " " << players[p].show_name << " ";
                     board_view += " " + players[p].show_name + " ";
                     flag_1 = true;
                     break;
@@ -230,11 +230,11 @@ string Board::get_board() {
             for (int w = 0; w < walls.size(); w++) {
                 if ((i == BOARD_SIZE - walls[w].x) && (j == walls[w].y - 1) && (walls[w].type == "v")) {
                     if (!flag_1) {
-                        cout << "   |";
+                        // cout<< "   |";
                         board_view += "   |";
                     }
                     else {
-                        cout << "|";
+                        // cout<< "|";
                         board_view += "|";
                     }
                     flag_2 = true;
@@ -242,41 +242,42 @@ string Board::get_board() {
                 }
             }
             if (!flag_2 && flag_1 && j < BOARD_SIZE - 1) {
-                cout << " ";
+                // cout<< " ";
                 board_view += " ";
             }
             if (!flag_1 && !flag_2) {
                 if (j == BOARD_SIZE - 1) {
-                    cout << "   ";
+                    // cout<< "   ";
                     board_view += "   ";
                 } 
                 else {
                     if (i == (BOARD_SIZE - 1) / 2 && j == (BOARD_SIZE - 1) / 2) {
-                        cout << " 🚩 ";
+                        // cout<< " 🚩 ";
+                        board_view += " 🚩 ";
                     }
                     else {
-                        cout << "    ";
+                        // cout<< "    ";
                         board_view += "    ";
                     }
                 }
             }
         }
-        cout << "| " << BOARD_SIZE - i << endl;
+        // cout<< "| " << BOARD_SIZE - i << endl;
         board_view += "| " + to_string(BOARD_SIZE - i) + "\n";
     }
-    cout << 0 << "  ";
+    // cout<< 0 << "  ";
     board_view += "0  ";
     for (int j = 0; j < BOARD_SIZE; j++) {
-        cout << "*---";
+        // cout<< "*---";
         board_view += "*---";
     }
-    cout << "*" << endl << "     ";
+    // cout<< "*" << endl << "     ";
     board_view += "*\n     ";
     for (int i = 1; i < BOARD_SIZE; i++) {
-        cout << i << "   ";
+        // cout<< i << "   ";
         board_view += to_string(i) + "   ";   
     }
-    cout << BOARD_SIZE << endl;
+    // cout<< BOARD_SIZE << endl;
     board_view += to_string(BOARD_SIZE) + "\n";
     // system("clear");
     return board_view;
