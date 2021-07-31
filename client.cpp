@@ -18,12 +18,24 @@ bool is_valid_dir(string dir) {
     return dir == "w" || dir == "d" || dir == "a" || dir == "s";
 }
 
-int main() {
-    string name;
-    int board_size;
+string server_host;
+int server_port;
+
+string name;
+int board_size;
+
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        cout << BOLD(FRED("Please enter host and port of server...")) << endl;
+        cout << "Help command: ./client.out [HOST] [PORT]" << endl;
+        return 0;
+    }
+    else {
+        server_host = argv[1];
+        server_port = atoi(argv[2]);
+    }
     
-    // TODO: read this from argv!
-    Client cli("localhost", 8080);
+    Client cli(server_host, server_port);
 
     system("clear");
 

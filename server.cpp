@@ -9,7 +9,8 @@ using namespace std;
 using namespace httplib;
 using namespace nlohmann;
 
-const int port = 8080;
+// default port is 8080
+int running_port = 8080;
 
 int main(int argc, char *argv[]) {
     ifstream i("response_codes.json");
@@ -18,16 +19,18 @@ int main(int argc, char *argv[]) {
 
     Server srv;
 
-    if (argc != 2 || strlen(argv[1]) != 1) {
+    if (argc < 2 || strlen(argv[1]) != 1) {
+        cout << "Invalid players number. (chosse between 2, 3, 4)";
+        return 0;
+    }
+    int players_number = int(argv[1][0] - '0');
+    if (players_number > 4 || players_number < 2) {
         cout << "Invalid players number. (chosse between 2, 3, 4)";
         return 0;
     }
 
-    int players_number = int(argv[1][0] - '0');
-
-    if (players_number > 4 || players_number < 2) {
-        cout << "Invalid players number. (chosse between 2, 3, 4)";
-        return 0;
+    if (argc == 3) {
+        running_port = atoi(argv[2]);
     }
 
     Quoridor quoridor(players_number);
@@ -122,9 +125,9 @@ int main(int argc, char *argv[]) {
         res.set_content(j_res.dump(), "application/json");
     });
 
-    cout << "Server listening on port " << port << "..." << endl;
+    cout << "Server listening on port " << running_port << "..." << endl;
     
-    srv.listen("localhost", port);
+    srv.listen("localhost", running_port);
 
     return 0;
 }
