@@ -59,13 +59,9 @@ int main() {
     while (auto res = cli.Get("/game-data")) {
         if (res->status == 200) {
             auto p_res = json::parse(res->body);
-            // cout << p_res["status"] << ", " << p_res["current_player"] << endl;
             current_board = p_res["board"].get<string>();
-            // if (current_board != last_board) {
-                system("clear");
-                cout << current_board << endl;
-                // last_board = current_board;
-            // }
+            system("clear");
+            cout << current_board << endl;
             if (p_res["is_game_finished"] == true) { 
                 cout << BOLD("Game finished!") << endl << endl;
                 cout << FGRN("Player ") << p_res["winner_player_name"].get<string>() << FGRN(" win the game.") << endl;
@@ -76,10 +72,7 @@ int main() {
             }
             if (p_res["status"] == "801") {
                 current_message = p_res["message"].get<string>();
-                // if (current_message != last_message) {
-                    cout << FRED(current_message) << endl;
-                    // last_message = current_message;
-                // }
+                cout << FRED(current_message) << endl;
             }
             else if (p_res["current_player"] == name) {
                 cout << "[#] It's your turn!" << endl << endl;
