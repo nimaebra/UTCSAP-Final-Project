@@ -1,5 +1,5 @@
 {
-  "800": "Successful",
+  "800": "[-] Successful",
   "801": "[!] Wait for other players to join",
   "802": "[!] Cannot join because server is full",
   "803": "[!] The entered name is duplicate",
@@ -11,5 +11,6 @@
   "809": "[!] Invalid direction to move",
   "810": "[!] It's not your turn",
   "811": "[!] Invalid player name",
-  "812": "[!] Cannot move to this coordinate"
+  "812": "[!] Cannot move to this coordinate",
+  "813": "[!] The game is over"
 }

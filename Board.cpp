@@ -2,7 +2,9 @@
 #include <iomanip>
 #include <string>
 #include <stdlib.h>
+
 #include "Board.h"
+#include "colors.h"
 
 using namespace std;
 
@@ -25,15 +27,55 @@ bool is_valid_dir(string dir) {
     return dir == "w" || dir == "d" || dir == "a" || dir == "s";
 }
 
+string get_dir_title(string dir) {
+    if (dir == "a") {
+        return "left";
+    }
+    else if (dir == "s") {
+        return "down";
+    }
+    else if (dir == "d") {
+        return "right";
+    }
+    else {
+        return "top";
+    }
+}
+
+string Board::get_colored_name(int player_index, bool first_letter = false) {
+    string name = players[player_index].name;
+    if (first_letter) {
+        name = name.substr(0, 1);
+    }
+    if (player_index == 0) { 
+        return BOLD(FYEL(name));
+    }
+    else if (player_index == 1) {
+        return BOLD(FCYN(name));
+    }
+    else if (player_index == 2) {
+        return BOLD(FMAG(name));
+    }
+    else {
+        return BOLD(FBLU(name));
+    }
+}
+
 Board::Board(int players_num) {
     players_number = players_num;
     players = new Player[players_number];
     current_player = 0;
     players_index = 0;
     winner_player_index = -1;
+    last_action_type = "";
+    last_action = "";
 }
 
-string Board::add_player(std::string name) {
+bool Board::is_game_finished() {
+    return winner_player_index != -1;
+}
+
+string Board::add_player(string name) {
     if (players_number <= players_index) {
         return "802";
     }
@@ -65,6 +107,9 @@ string Board::add_player(std::string name) {
 }
 
 string Board::move_player(int player_index, string dir) {
+    if (is_game_finished()) { 
+        return "813";
+    }
     if (!is_valid_dir(dir)) {
         return "809";
     }
@@ -89,17 +134,22 @@ string Board::move_player(int player_index, string dir) {
     else if (dir == "a") {
         players[player_index].y -= 1;
     }
-    if ((players[player_index].x == (BOARD_SIZE - 1) / 2) && 
-        (players[player_index].y == (BOARD_SIZE - 1) / 2))) {
+    if ((players[player_index].x == (BOARD_SIZE + 1) / 2) && 
+        (players[player_index].y == (BOARD_SIZE + 1) / 2)) {
         winner_player_index = player_index;
     }
     else {
+        last_action_type = "move";
+        last_action = get_dir_title(dir);
         current_player = (current_player + 1) % players_number;
     }
     return "800";
 }
 
 string Board::place_wall(int i, int j, string type) {
+    if (is_game_finished()) { 
+        return "813";
+    }
     if (!is_valid_row(i)) {
         return "805";
     }
@@ -117,6 +167,7 @@ string Board::place_wall(int i, int j, string type) {
     // TODO: chech if the wall doesn't block a player completely!
     Wall new_wall = {.x = i, .y = j, .type = type};
     walls.push_back(new_wall);
+    last_action_type = "place_wall";
     current_player = (current_player + 1) % players_number;
     return "800";
 }
@@ -161,7 +212,7 @@ bool Board::is_valid_move(int player_index, string dir) {
             return false;
         }
         for (int i = 0; i < walls.size(); i++) {
-            if ((walls[i].x == posX) && (walls[i].y == posY) && (walls[i].type == "h")) {
+            if ((walls[i].x == posX - 1) && (walls[i].y == posY) && (walls[i].type == "h")) {
                 return false;
             }
         }
@@ -177,7 +228,7 @@ bool Board::is_valid_move(int player_index, string dir) {
             return false;
         }
         for (int i = 0; i < walls.size(); i++) {
-            if ((walls[i].x == posX) && (walls[i].y == posY) && (walls[i].type == "v")) {
+            if ((walls[i].x == posX) && (walls[i].y == posY - 1) && (walls[i].type == "v")) {
                 return false;
             }
         }
@@ -249,7 +300,7 @@ string Board::get_board() {
             for (int p = 0; p < players_number; p++) {
                 if ((i == BOARD_SIZE - players[p].x) && (j == players[p].y - 1)) {
                     // cout<< " " << players[p].show_name << " ";
-                    board_view += " " + players[p].show_name + " ";
+                    board_view += ' ' + get_colored_name(p, true) + ' ';
                     flag_1 = true;
                     break;
                 }

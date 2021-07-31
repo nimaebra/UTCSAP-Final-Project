@@ -42,7 +42,8 @@ int main(int argc, char *argv[]) {
         }
         json j_res = {
             { "message", message },
-            { "status", result }
+            { "status", result },
+            { "board_size", to_string(BOARD_SIZE) }
         };
         res.set_content(j_res.dump(), "application/json");
     });
@@ -91,19 +92,31 @@ int main(int argc, char *argv[]) {
     srv.Get("/game-data", [&](const auto& req, auto& res) {
         string message = "", status = "800";
         if (board.players_index < board.players_number) {
-            message = "Wait for other players to join!";
+            message = "Wait for other players to join...";
             status = "801";
         }
-        // if (board.check_winner()) { 
-
-        // }
         json j_res = {
             { "current_player", board.players[board.current_player].name },
+            { "current_player_name_colored", board.get_colored_name(board.current_player) },
             { "board", board.get_board() },
             { "message", message },
             { "status", status },
             { "player_numbers", board.players_number },
+            { "last_action_type", board.last_action_type },
+            { "last_action_message", "" }
         };
+        int last_player_index = (board.current_player - 1 + board.players_number) % board.players_number;
+        if (board.last_action_type == "move") {
+            j_res["last_action_message"] = "Player " + board.get_colored_name(last_player_index) + " move " + board.last_action;
+        }
+        else if (board.last_action_type == "place_wall") {
+            string wall_type = (board.walls[board.walls.size() - 1].type == "h") ? "horizontal" : "vertical";
+            j_res["last_action_message"] = "Player " + board.get_colored_name(last_player_index) + " place " + wall_type + " wall at (" + to_string(board.walls[board.walls.size() - 1].x) + ", " + to_string(board.walls[board.walls.size() - 1].y) + ")";
+        }
+        if (board.is_game_finished()) { 
+            j_res["is_game_finished"] = true;
+            j_res["winner_player_name"] = board.get_colored_name(board.winner_player_index);
+        }
         res.set_content(j_res.dump(), "application/json");
     });
 
