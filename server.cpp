@@ -9,6 +9,8 @@ using namespace std;
 using namespace httplib;
 using namespace nlohmann;
 
+const int port = 8080;
+
 int main(int argc, char *argv[]) {
     ifstream i("response_codes.json");
     json response_codes;
@@ -120,5 +122,9 @@ int main(int argc, char *argv[]) {
         res.set_content(j_res.dump(), "application/json");
     });
 
-    srv.listen("localhost", 8080);
+    cout << "Server listening on port " << port << "..." << endl;
+    
+    srv.listen("localhost", port);
+
+    return 0;
 }

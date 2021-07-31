@@ -1,4 +1,4 @@
-all: client server
+all: server client
 
 server: server.o
 	g++ -std=c++14 -o server.out server.cpp
