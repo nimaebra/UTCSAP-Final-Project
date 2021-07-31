@@ -1,2 +1,3 @@
 # UTCSAP-Final-Project
-C++ Quoridor Game Client &amp; Server
+
+C++ Quoridor Quoridor Client &amp; Server

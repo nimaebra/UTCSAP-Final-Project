@@ -14,9 +14,9 @@ struct Wall {
     int x, y;
 };
 
-class Board {
+class Quoridor {
     public:
-        Board(int players_num);
+        Quoridor(int players_num);
         Player* players;
         vector<Wall> walls;
         int players_number, players_index, current_player;

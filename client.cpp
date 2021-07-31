@@ -4,22 +4,15 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "json.hpp"
-#include "httplib.h"
-#include "colors.h"
+#include "utils/json.hpp"
+#include "utils/httplib.h"
+#include "utils/colors.h"
 
 using namespace std;
 using namespace httplib;
 using namespace nlohmann;
 
 const unsigned int microsecond = 1000000;
-
-const string green("\033[1;32m");
-const string red("\033[0;31m");
-const string yellow("\033[1;33m");
-const string cyan("\033[0;36m");
-const string magenta("\033[0;35m");
-const string reset("\033[0m");
 
 bool is_valid_dir(string dir) {
     return dir == "w" || dir == "d" || dir == "a" || dir == "s";
@@ -158,7 +151,7 @@ int main() {
                 cout << "[#] It's " + p_res["current_player_name_colored"].get<string>() + "'s turn!" << endl;
             }
         }
-        usleep(5 * microsecond);
+        usleep(1 * microsecond);
     }
     return 0;
 } 

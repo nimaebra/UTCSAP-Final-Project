@@ -3,8 +3,8 @@
 #include <string>
 #include <stdlib.h>
 
-#include "Board.h"
-#include "colors.h"
+#include "Quoridor.h"
+#include "../utils/colors.h"
 
 using namespace std;
 
@@ -42,7 +42,7 @@ string get_dir_title(string dir) {
     }
 }
 
-string Board::get_colored_name(int player_index, bool first_letter = false) {
+string Quoridor::get_colored_name(int player_index, bool first_letter = false) {
     string name = players[player_index].name;
     if (first_letter) {
         name = name.substr(0, 1);
@@ -61,7 +61,7 @@ string Board::get_colored_name(int player_index, bool first_letter = false) {
     }
 }
 
-Board::Board(int players_num) {
+Quoridor::Quoridor(int players_num) {
     players_number = players_num;
     players = new Player[players_number];
     current_player = 0;
@@ -71,11 +71,11 @@ Board::Board(int players_num) {
     last_action = "";
 }
 
-bool Board::is_game_finished() {
+bool Quoridor::is_game_finished() {
     return winner_player_index != -1;
 }
 
-string Board::add_player(string name) {
+string Quoridor::add_player(string name) {
     if (players_number <= players_index) {
         return "802";
     }
@@ -106,7 +106,7 @@ string Board::add_player(string name) {
     return "800";
 }
 
-string Board::move_player(int player_index, string dir) {
+string Quoridor::move_player(int player_index, string dir) {
     if (is_game_finished()) { 
         return "813";
     }
@@ -146,7 +146,7 @@ string Board::move_player(int player_index, string dir) {
     return "800";
 }
 
-string Board::place_wall(int i, int j, string type) {
+string Quoridor::place_wall(int i, int j, string type) {
     if (is_game_finished()) { 
         return "813";
     }
@@ -172,7 +172,7 @@ string Board::place_wall(int i, int j, string type) {
     return "800";
 }
 
-bool Board::is_valid_move(int player_index, string dir) {
+bool Quoridor::is_valid_move(int player_index, string dir) {
     int posX = players[player_index].x;
     int posY = players[player_index].y;
     if (dir == "w") {
@@ -242,7 +242,7 @@ bool Board::is_valid_move(int player_index, string dir) {
     return false;
 }
 
-int Board::get_player_index(string name) {
+int Quoridor::get_player_index(string name) {
     for (int i = 0; i < players_number; i++) {
         if (players[i].name == name) {
             return i;
@@ -251,7 +251,7 @@ int Board::get_player_index(string name) {
     return -1;
 }
 
-string Board::get_board() {
+string Quoridor::get_board() {
     // // cout<< " im here: " << players_number << " " << players[0].x << endl;
     // // cout<< walls[0].x << " " << walls[0].y << endl;
     string board_view = "";
