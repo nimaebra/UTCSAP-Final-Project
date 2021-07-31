@@ -13,4 +13,4 @@ client.o: client.cpp
 	g++ -std=c++14 -c client.cpp
 
 clean:
-	rm *.o server.out client.out
+	rm *.o *.out
