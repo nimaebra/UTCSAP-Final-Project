@@ -20,12 +20,14 @@ int main(int argc, char *argv[]) {
     Server srv;
 
     if (argc < 2 || strlen(argv[1]) != 1) {
-        cout << "Invalid players number. (chosse between 2, 3, 4)";
+        cout << BOLD(FRED("Invalid players number. (chosse between 2, 3, 4)")) << endl;
+        cout << "Help command: ./server.out [PLAYER_NUMBER] [PORT]" << endl;
         return 0;
     }
     int players_number = int(argv[1][0] - '0');
     if (players_number > 4 || players_number < 2) {
-        cout << "Invalid players number. (chosse between 2, 3, 4)";
+        cout << BOLD(FRED("Invalid players number. (chosse between 2, 3, 4)")) << endl;
+        cout << "Help command: ./server.out [PLAYER_NUMBER] [PORT]" << endl;
         return 0;
     }
 
