@@ -20,6 +20,7 @@ class Board {
         Player* players;
         vector<Wall> walls;
         int players_number, players_index, current_player;
+        int winner_player_index;
         void place_players();
         string get_board();
         string place_wall(int, int, string);

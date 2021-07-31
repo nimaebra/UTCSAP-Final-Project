@@ -30,6 +30,7 @@ Board::Board(int players_num) {
     players = new Player[players_number];
     current_player = 0;
     players_index = 0;
+    winner_player_index = -1;
 }
 
 string Board::add_player(std::string name) {
@@ -88,7 +89,13 @@ string Board::move_player(int player_index, string dir) {
     else if (dir == "a") {
         players[player_index].y -= 1;
     }
-    current_player = (current_player + 1) % players_number;
+    if ((players[player_index].x == (BOARD_SIZE - 1) / 2) && 
+        (players[player_index].y == (BOARD_SIZE - 1) / 2))) {
+        winner_player_index = player_index;
+    }
+    else {
+        current_player = (current_player + 1) % players_number;
+    }
     return "800";
 }
 
@@ -126,6 +133,11 @@ bool Board::is_valid_move(int player_index, string dir) {
                 return false;
             }
         }
+        for (int i = 0; i < players_number; i++) {
+            if ((player_index != i) && (players[i].x == posX + 1) && (players[i].y == posY)) {
+                return false;
+            }
+        }
         return true;
     }
     else if (dir == "d") {
@@ -134,6 +146,11 @@ bool Board::is_valid_move(int player_index, string dir) {
         }
         for (int i = 0; i < walls.size(); i++) {
             if ((walls[i].x == posX) && (walls[i].y == posY) && (walls[i].type == "v")) {
+                return false;
+            }
+        }
+        for (int i = 0; i < players_number; i++) {
+            if ((player_index != i) && (players[i].x == posX) && (players[i].y == posY + 1)) {
                 return false;
             }
         }
@@ -148,6 +165,11 @@ bool Board::is_valid_move(int player_index, string dir) {
                 return false;
             }
         }
+        for (int i = 0; i < players_number; i++) {
+            if ((player_index != i) && (players[i].x == posX - 1) && (players[i].y == posY)) {
+                return false;
+            }
+        }
         return true;
     }
     else if (dir == "a") {
@@ -156,6 +178,11 @@ bool Board::is_valid_move(int player_index, string dir) {
         }
         for (int i = 0; i < walls.size(); i++) {
             if ((walls[i].x == posX) && (walls[i].y == posY) && (walls[i].type == "v")) {
+                return false;
+            }
+        }
+        for (int i = 0; i < players_number; i++) {
+            if ((player_index != i) && (players[i].x == posX) && (players[i].y == posY - 1)) {
                 return false;
             }
         }
