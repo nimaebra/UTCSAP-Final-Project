@@ -89,7 +89,6 @@ int main(int argc, char *argv[]) {
         res.set_content(j_res.dump(), "application/json");
     });
 
-    // 801 => wait for other players to join!
     srv.Get("/game-data", [&](const auto& req, auto& res) {
         string message = "", status = "800";
         if (quoridor.players_index < quoridor.players_number) {

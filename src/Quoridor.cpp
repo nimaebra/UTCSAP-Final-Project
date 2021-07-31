@@ -164,7 +164,6 @@ string Quoridor::place_wall(int i, int j, string type) {
             return "804";
         }
     }
-    // TODO: chech if the wall doesn't block a player completely!
     Wall new_wall = {.x = i, .y = j, .type = type};
     walls.push_back(new_wall);
     last_action_type = "place_wall";

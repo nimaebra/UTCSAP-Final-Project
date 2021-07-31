@@ -151,7 +151,7 @@ int main() {
                 cout << "[#] It's " + p_res["current_player_name_colored"].get<string>() + "'s turn!" << endl;
             }
         }
-        usleep(1 * microsecond);
+        usleep(0.5 * microsecond);
     }
     return 0;
 } 
